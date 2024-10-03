@@ -1,0 +1,27 @@
+<div class="flex w-full flex-col p-6" *ngIf="dialogData as data">
+  <div class="pb-4 font-bold mx-auto">
+    {{ data.header }}
+  </div>
+  <div class="pb-7 text-base">
+    {{ data.title }}
+  </div>
+  <div class="flex flex-row items-center justify-end">
+    <button
+      mat-stroked-button
+      color="primary"
+      class="font-size-sm button-font-bold mr-1 !h-8 !border-none"
+      (click)="onCancelClick()"
+    >
+      {{ data.cancel }}
+    </button>
+
+    <button
+      mat-flat-button
+      color="primary"
+      class="font-size-sm button-font-bold !h-8"
+      (click)="onUpdateCkick()"
+    >
+      {{ data.update }}
+    </button>
+  </div>
+</div>

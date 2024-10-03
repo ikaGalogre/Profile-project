@@ -1,6 +1,11 @@
 <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
   <div class="w-screen bg-white shadow-lg rounded-lg overflow-hidden">
-    <div class="flex mx-auto justify-center mt-8">
+    @if(showErrorAlert) {
+    <div class="absolute top-5">
+      <app-alert [alertData]="alertData"></app-alert>
+    </div>
+    }
+    <div class="flex mx-auto w-2/4 justify-center mt-8">
       <div class="flex flex-col items-center">
         <h2 class="text-lg font-semibold mb-4">Update Profile Picture</h2>
 
@@ -30,13 +35,12 @@
             formControlName="name"
             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="name"
-            [(ngModel)]="userData.name"
             type="text"
           />
           @if( userForm.get('name')?.invalid && (userForm.get('name')?.touched
           || userForm.get('name')?.dirty)){
           <div>
-            <small class="text-red-500">First name is required.</small>
+            <small class="text-red-500">First name is required</small>
           </div>
           }
         </div>
@@ -52,17 +56,19 @@
             formControlName="surname"
             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="surname"
-            [(ngModel)]="userData.surname"
             type="text"
           />
           @if( userForm.get('surname')?.invalid &&
           (userForm.get('surname')?.touched || userForm.get('surname')?.dirty)){
           <div>
-            <small class="text-red-500">Last name is required.</small>
+            <small class="text-red-500">Last name is required</small>
           </div>
           }
         </div>
-
+        @if(loading){<mat-spinner
+          class="!w-20 !absolute top-40 right-47"
+        ></mat-spinner
+        >}
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
             Email
@@ -71,23 +77,18 @@
             formControlName="email"
             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="email"
-            [(ngModel)]="userData.email"
             type="email"
           />
           @if(userForm.get('email')?.invalid && (userForm.get('email')?.touched
           || userForm.get('email')?.dirty)){
-
           <div>
-            <small
-              class="text-red-500"
-              *ngIf="userForm.get('email')?.errors?.['required']"
-              >Email is required.</small
-            >
-            <small
-              class="text-red-500"
-              *ngIf="userForm.get('email')?.errors?.['email']"
-              >Invalid email format.</small
-            >
+            @if(userForm.get('email')?.errors?.['required']){
+
+            <small class="text-red-500">Email is required</small>
+            } @if(userForm.get('email')?.errors?.['email']){
+
+            <small class="text-red-500">Invalid email format</small>
+            }
           </div>
           }
         </div>
@@ -103,16 +104,15 @@
             formControlName="mobile"
             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="mobile"
-            [(ngModel)]="userData.mobile"
             type="text"
           />
-          @if( userForm.get('mobile')?.invalid &&
+          @if(userForm.get('mobile')?.invalid &&
           (userForm.get('mobile')?.touched || userForm.get('mobile')?.dirty)){
 
           <div>
             @if(userForm.get('mobile')?.errors?.['pattern']){
 
-            <small class="text-red-500">Only numbers are allowed.</small>
+            <small class="text-red-500">Only numbers are allowed</small>
             }
           </div>
           }
@@ -120,8 +120,9 @@
 
         <div class="flex items-center justify-between">
           <button
-            type="submit"
+            type="button"
             [disabled]="userForm.invalid"
+            (click)="openDialog()"
             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
             Save

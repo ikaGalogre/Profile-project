@@ -1,0 +1,22 @@
+<mat-card *ngIf="showAlert">
+  <mat-card-content
+    class="!flex min-h-[64px] w-2/4 mx-auto items-center justify-between gap-6 bg-neutral-800 !py-4"
+  >
+    <section class="flex gap-7">
+      <div class="flex w-6 items-center">
+        <mat-icon class="material-icons-outlined text-white">{{
+          alertData.matIconName
+        }}</mat-icon>
+      </div>
+
+      <p
+        class="!h-auto w-48 text-sm font-normal my-auto leading-5 text-primary-A100 sm:w-auto text-white"
+        [innerHTML]="alertData.alertText"
+      ></p>
+    </section>
+
+    <button (click)="hideAlert($event)" class="flex items-center">
+      <mat-icon class="text-white">cancel</mat-icon>
+    </button>
+  </mat-card-content>
+</mat-card>
