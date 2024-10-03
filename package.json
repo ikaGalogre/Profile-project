@@ -7,13 +7,14 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:Profile-page": "node dist/profile-page/server/server.mjs"
+    "serve:ssr:Profile-page": "node dist/profile-page/server/server.mjs",
+    "start:dev": "concurrently \"ng serve\" \"json-server --watch db.json\""
   },
   "private": true,
   "dependencies": {
     "@angular/animations": "^18.2.0",
     "@angular/cdk": "^18.2.6",
-    "@angular/common": "^18.2.0",
+    "@angular/common": "^18.2.7",
     "@angular/compiler": "^18.2.0",
     "@angular/core": "^18.2.0",
     "@angular/forms": "^18.2.0",
@@ -24,6 +25,7 @@
     "@angular/router": "^18.2.0",
     "@angular/ssr": "^18.2.7",
     "express": "^4.18.2",
+    "json-server": "^1.0.0-beta.3",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.10"
@@ -36,6 +38,7 @@
     "@types/jasmine": "~5.1.0",
     "@types/node": "^18.18.0",
     "autoprefixer": "^10.4.20",
+    "concurrently": "^9.0.1",
     "jasmine-core": "~5.2.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
