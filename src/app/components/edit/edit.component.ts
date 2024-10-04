@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output, output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -9,14 +9,17 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../services/user-service';
-import { IUserInfo } from '../../models/interfaces';
-import { HttpClient } from '@angular/common/http';
+import { IAlertData, IDialogData, IUserInfo } from '../../models/interfaces';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
 import { DialogResult } from '../../models/enums';
 import { AlertComponent } from '../alert/alert.component';
 import { AlertService } from '../../services/alert.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { dialogData, errorAlertData, userData } from '../../mock-data/mock';
+import { Subject, takeUntil } from 'rxjs';
+import { MatButtonModule } from '@angular/material/button';
+import { emailRegExp } from '../../utilities/regular-expresions/regular-expresions';
 
 @Component({
   selector: 'app-edit',
@@ -27,6 +30,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     ReactiveFormsModule,
     AlertComponent,
     MatProgressSpinnerModule,
+    MatButtonModule,
   ],
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.css'],
@@ -37,27 +41,12 @@ export class EditComponent implements OnInit {
   userForm: FormGroup;
   showErrorAlert = false;
   loading = false;
-  userData: IUserInfo = {
-    id: 0,
-    name: '',
-    surname: '',
-    mobile: '',
-    email: '',
-    profilePicture: '',
-  };
-  dialogData = {
-    header: 'Edit Profile',
-    title: "By continuing, you'll edit profile information",
-    cancel: 'Cancel',
-    update: 'Update',
-  };
-  alertData = {
-    alertText: 'Something went wrong, try again later',
-    matIconName: 'info',
-  };
+  userData: IUserInfo = userData;
+  dialogData: IDialogData = dialogData;
+  alertData: IAlertData = errorAlertData;
+  destroy$ = new Subject<null>();
 
   constructor(
-    private http: HttpClient,
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private userService: UserService,
@@ -68,30 +57,45 @@ export class EditComponent implements OnInit {
     this.userForm = this.fb.group({
       name: ['', Validators.required],
       surname: ['', Validators.required],
-      email: ['', [Validators.email, Validators.required]],
-      mobile: ['', [Validators.pattern('^[0-9]*$')]],
+      email: [
+        '',
+        [
+          Validators.email,
+          Validators.required,
+          Validators.pattern(emailRegExp),
+        ],
+      ],
+      mobile: [
+        '',
+        [
+          Validators.minLength(10),
+          Validators.maxLength(10),
+          Validators.pattern('^[0-9]*$'),
+        ],
+      ],
       profilePicture: [''],
     });
   }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe((param) => {
+    this.route.paramMap.pipe(takeUntil(this.destroy$)).subscribe((param) => {
       let id = Number(param.get('id'));
       this.getById(id);
     });
   }
 
   getById(id: number) {
-    this.userService.editUserData(id).subscribe((data) => {
-      this.userData = data;
-      // Set values in the form controls using setValue
-      this.userForm.get('name')?.setValue(this.userData.name);
-      this.userForm.get('surname')?.setValue(this.userData.surname);
-      this.userForm.get('email')?.setValue(this.userData.email);
-      this.userForm.get('mobile')?.setValue(this.userData.mobile);
-      // Set preview URL from profile picture if available
-      this.previewUrl = this.userData.profilePicture;
-    });
+    this.userService
+      .editUserData(id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.userData = data;
+        this.userForm.get('name')?.setValue(this.userData.name);
+        this.userForm.get('surname')?.setValue(this.userData.surname);
+        this.userForm.get('email')?.setValue(this.userData.email);
+        this.userForm.get('mobile')?.setValue(this.userData.mobile);
+        this.previewUrl = this.userData.profilePicture;
+      });
   }
 
   onFileSelected(event: Event): void {
@@ -105,7 +109,6 @@ export class EditComponent implements OnInit {
       };
       reader.readAsDataURL(this.selectedFile);
     } else {
-      // Reset if no file is selected
       this.selectedFile = null;
       this.previewUrl = null;
     }
@@ -113,21 +116,21 @@ export class EditComponent implements OnInit {
 
   onSubmit(): void {
     if (this.userForm.valid) {
-      // Use form value directly
       this.loading = true;
-      const updatedUser = {
+      const updatedUser: IUserInfo = {
         ...this.userData,
         profilePicture: this.selectedFile
-          ? this.previewUrl
-          : this.userData.profilePicture,
-        name: this.userForm.get('name')?.value,
-        surname: this.userForm.get('surname')?.value,
-        email: this.userForm.get('email')?.value,
-        mobile: this.userForm.get('mobile')?.value,
+          ? (this.previewUrl as string)
+          : (this.userData.profilePicture as string),
+        name: this.userForm.get('name')?.value as string,
+        surname: this.userForm.get('surname')?.value as string,
+        email: this.userForm.get('email')?.value as string,
+        mobile: this.userForm.get('mobile')?.value as string,
       };
 
-      this.http
-        .patch(`http://localhost:3000/users/${this.userData.id}`, updatedUser)
+      this.userService
+        .updateUserData(updatedUser)
+        .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: () => {
             setTimeout(() => {
@@ -136,7 +139,7 @@ export class EditComponent implements OnInit {
               this.router.navigate(['']);
             }, 2000);
           },
-          error: (error) => {
+          error: () => {
             setTimeout(() => {
               this.loading = false;
               this.showErrorAlert = true;
@@ -146,9 +149,6 @@ export class EditComponent implements OnInit {
     }
   }
 
-  cancel() {
-    this.router.navigate(['']);
-  }
   openDialog() {
     const dialogRef = this.dialog.open(DialogComponent, {
       width: '300px',
@@ -156,10 +156,22 @@ export class EditComponent implements OnInit {
 
     dialogRef.componentInstance.dialogData = this.dialogData;
 
-    dialogRef.afterClosed().subscribe((result: DialogResult) => {
-      if (result === DialogResult.Update) {
-        this.onSubmit();
-      }
-    });
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((result: DialogResult) => {
+        if (result === DialogResult.Update) {
+          this.onSubmit();
+        }
+      });
+  }
+
+  cancel() {
+    this.router.navigate(['']);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(null);
+    this.destroy$.complete();
   }
 }

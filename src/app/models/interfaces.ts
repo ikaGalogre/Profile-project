@@ -6,3 +6,14 @@ export interface IUserInfo {
   mobile: string;
   profilePicture: string;
 }
+export interface IDialogData {
+  header: string;
+  title: string;
+  cancel: string;
+  update: string;
+}
+
+export interface IAlertData {
+  alertText: string;
+  matIconName: string;
+}

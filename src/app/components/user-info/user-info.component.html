@@ -1,69 +1,64 @@
-<div class="w-screen bg-white shadow-lg rounded-lg overflow-hidden">
-  @if(showSuccessAlert){<app-alert [alertData]="alertData"></app-alert>}
+<div class="w-screen">
   @for(user of user;track user){
-  <div class="flex mx-auto justify-center mt-8">
-    <div class="relative">
-      <img
-        class="w-40 h-40 object-cover rounded-full border-2 border-gray-300"
-        [src]="user.profilePicture"
-        alt="User Profile Picture"
-      />
-    </div>
-  </div>
-
-  <div class="p-8">
-    <div class="mb-4">
-      <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
-        First Name
-      </label>
-      <p
-        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-      >
-        {{ user.name }}
-      </p>
+  <div
+    class="w-full md:w-3/4 bg-white mx-auto shadow-xl overflow-hidden mb-64 rounded-3xl"
+  >
+    <div class="flex mx-auto justify-center mt-20">
+      <div class="relative md:absolute md:top-20">
+        <img
+          class="w-60 h-60 object-cover rounded-full border-2 border-gray-300"
+          [src]="user.profilePicture"
+          alt="User Profile Picture"
+        />
+      </div>
     </div>
 
-    <div class="mb-4">
-      <label class="block text-gray-700 text-sm font-bold mb-2" for="surname">
-        Last Name
-      </label>
-      <p
-        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-      >
-        {{ user.surname }}
-      </p>
-    </div>
+    <div
+      class="flex justify-center items-center my-10 md:my-28 flex-col w-full"
+    >
+      @if(showSuccessAlert){
+      <div class="absolute top-5">
+        <app-alert [alertData]="alertData"></app-alert>
+      </div>
+      }
+      <div class="w-fit mx-auto flex flex-col items-center">
+        <h1 class="text-5xl font-medium text-center mb-3">
+          {{ user.name | titlecase }} {{ user.surname | titlecase }}
+        </h1>
 
-    <div class="mb-4">
-      <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
-        Email
-      </label>
-      <p
-        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-      >
-        {{ user.email }}
-      </p>
-    </div>
+        <div class="mb-10 items-center flex w-40">
+          <mat-icon class="text-black mr-2">location_on</mat-icon>
+          <p>Tbilisi, Georgia</p>
+        </div>
 
-    <div class="mb-4">
-      <label class="block text-gray-700 text-sm font-bold mb-2" for="mobile">
-        Mobile Number
-      </label>
-      <p
-        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-      >
-        {{ user.mobile }}
-      </p>
-    </div>
+        <div class="mb-8 items-center flex flex-col text-center">
+          <p class="text-xl font-semibold">Web Developer - Software Engineer</p>
+          <p class="text-gray-600 text-lg">
+            University of Melbourne - Melbourne, Australia
+          </p>
+        </div>
 
-    <div class="flex items-center justify-between">
-      <button
-        (click)="navigateToEdit(user)"
-        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        type="button"
-      >
-        Edit Profile
-      </button>
+        <div class="mb-4 flex justify-center items-center w-full gap-8">
+          <span class="flex items-center">
+            <mat-icon class="text-black mr-2">email</mat-icon>
+            <p class="text-lg">{{ user.email }}</p>
+          </span>
+          <span class="flex items-center">
+            <mat-icon class="text-black mr-2">phone</mat-icon>
+            <p class="text-lg">{{ user.mobile }}</p>
+          </span>
+        </div>
+
+        <div class="flex items-center justify-center mt-5">
+          <button
+            (click)="navigateToEdit(user)"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-10 md:px-28 rounded focus:outline-none focus:shadow-outline"
+            type="button"
+          >
+            Edit Profile
+          </button>
+        </div>
+      </div>
     </div>
   </div>
   }
