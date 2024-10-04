@@ -8,11 +8,12 @@ import { Subject, takeUntil } from 'rxjs';
 import { succesAlertData } from '../../mock-data/mock';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-user-info',
   standalone: true,
-  imports: [AlertComponent, CommonModule, MatIconModule],
+  imports: [AlertComponent, CommonModule, MatIconModule, MatButtonModule],
   templateUrl: './user-info.component.html',
   styleUrl: './user-info.component.css',
 })
@@ -26,9 +27,7 @@ export class UserInfoComponent implements OnInit {
     private router: Router,
     private userService: UserService,
     private alertService: AlertService
-  ) {
-    console.log('shakakaka');
-  }
+  ) {}
 
   ngOnInit(): void {
     this.userService

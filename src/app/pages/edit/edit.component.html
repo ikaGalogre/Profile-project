@@ -1,16 +1,18 @@
 <div class="w-screen">
-  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="userForm">
     <div
       class="px-10 pb-10 flex flex-col md:flex-row w-full md:w-3/4 bg-white md:py-24 md:mb-72 justify-center gap-10 md:gap-20 lg:gap-60 mx-auto shadow-xl overflow-hidden mb-60 rounded-3xl"
     >
-      @if(loading){<mat-spinner
+      @if(loading) {
+      <mat-spinner
         class="!w-28 !absolute right-[37%] md:right-[49%] top-1/2"
-      ></mat-spinner
-      >} @if(showErrorAlert) {
+      ></mat-spinner>
+      } @if(showErrorAlert) {
       <div class="absolute md:top-20 top-4">
         <app-alert [alertData]="alertData"></app-alert>
       </div>
       }
+
       <div class="flex flex-col items-center">
         <h2 class="text-lg font-semibold mb-4">Update Profile Picture</h2>
 
@@ -24,7 +26,7 @@
           />
         </div>
 
-        @if(previewUrl){
+        @if(previewUrl) {
         <img
           [src]="previewUrl"
           alt="Profile Preview"
@@ -37,114 +39,109 @@
         <h2 class="text-lg font-semibold mb-4">Update Profile Info</h2>
 
         <div class="mb-4">
-          <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
-            First Name:
-          </label>
-          <input
-            formControlName="name"
-            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="name"
-            type="text"
-          />
-          @if( userForm.get('name')?.invalid && (userForm.get('name')?.touched
-          || userForm.get('name')?.dirty)){
-          <div>
-            <small class="text-red-500">First name is required</small>
-          </div>
-          }
-        </div>
-
-        <div class="mb-4">
-          <label
-            class="block text-gray-700 text-sm font-bold mb-2"
-            for="surname"
+          <mat-form-field
+            [hideRequiredMarker]="true"
+            appearance="outline"
+            class="w-full"
           >
-            Last Name:
-          </label>
-          <input
-            formControlName="surname"
-            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="surname"
-            type="text"
-          />
-          @if( userForm.get('surname')?.invalid &&
-          (userForm.get('surname')?.touched || userForm.get('surname')?.dirty)){
-          <div>
-            <small class="text-red-500">Last name is required</small>
-          </div>
-          }
-        </div>
-
-        <div class="mb-4">
-          <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
-            Email:
-          </label>
-          <input
-            formControlName="email"
-            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="email"
-            type="email"
-          />
-          @if(userForm.get('email')?.invalid && (userForm.get('email')?.touched
-          || userForm.get('email')?.dirty)){
-          <div class="flex flex-col">
-            @if(userForm.get('email')?.errors?.['required']){
-
-            <small class="text-red-500">Email is required</small>
-            } @if(userForm.get('email')?.errors?.['pattern']){
-
-            <small class="text-red-500">Invalid email format</small>
+            <mat-label>First Name</mat-label>
+            <input matInput formControlName="name" id="name" type="text" />
+            @if(userForm.get('name')?.invalid && (userForm.get('name')?.touched
+            || userForm.get('name')?.dirty)) {
+            <mat-error>First name is required</mat-error>
             }
-          </div>
-          }
+          </mat-form-field>
         </div>
 
         <div class="mb-4">
-          <label
-            class="block text-gray-700 text-sm font-bold mb-2"
-            for="mobile"
+          <mat-form-field
+            [hideRequiredMarker]="true"
+            appearance="outline"
+            class="w-full"
           >
-            Mobile Number:
-          </label>
-          <input
-            formControlName="mobile"
-            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="mobile"
-            type="text"
-          />
-          @if(userForm.get('mobile')?.invalid &&
-          (userForm.get('mobile')?.touched || userForm.get('mobile')?.dirty)){
-
-          <div class="flex flex-col">
-            @if(userForm.get('mobile')?.errors?.['pattern']){
-
-            <small class="text-red-500">Only numbers are allowed</small>
-            } @if(userForm.get('mobile')?.errors?.['minlength']){
-
-            <small class="text-red-500">Min 10 number</small>
-            } @if(userForm.get('mobile')?.errors?.['maxlength']){
-
-            <small class="text-red-500">Max 10 number</small>
+            <mat-label>Last Name</mat-label>
+            <input
+              matInput
+              formControlName="surname"
+              id="surname"
+              type="text"
+            />
+            @if(userForm.get('surname')?.invalid &&
+            (userForm.get('surname')?.touched ||
+            userForm.get('surname')?.dirty)) {
+            <mat-error>Last name is required</mat-error>
             }
-          </div>
-          }
+          </mat-form-field>
+        </div>
+
+        <div class="mb-4">
+          <mat-form-field
+            [hideRequiredMarker]="true"
+            appearance="outline"
+            class="w-full"
+          >
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" id="email" type="email" />
+            @if(userForm.get('email')?.invalid &&
+            (userForm.get('email')?.touched || userForm.get('email')?.dirty)) {
+            <mat-error *ngIf="userForm.get('email')?.errors?.['required'] ">
+              Email is required
+            </mat-error>
+            <mat-error *ngIf="userForm.get('email')?.errors?.['pattern']">
+              Invalid email format
+            </mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="mb-4">
+          <mat-form-field
+            [hideRequiredMarker]="true"
+            appearance="outline"
+            class="w-full"
+          >
+            <mat-label>Mobile Number</mat-label>
+            <input
+              matInput
+              formControlName="mobile"
+              id="mobile"
+              type="text"
+              placeholder="Enter your mobile number"
+            />
+            @if(userForm.get('mobile')?.invalid &&
+            (userForm.get('mobile')?.touched || userForm.get('mobile')?.dirty))
+            {
+            <mat-error *ngIf="userForm.get('mobile')?.errors?.['pattern']">
+              Only numbers are allowed
+            </mat-error>
+            <mat-error *ngIf="userForm.get('mobile')?.errors?.['minlength']">
+              Min 10 numbers
+            </mat-error>
+            <mat-error *ngIf="userForm.get('mobile')?.errors?.['maxlength']">
+              Max 10 numbers
+            </mat-error>
+            }
+          </mat-form-field>
         </div>
 
         <div class="flex items-center justify-between">
           <button
+            mat-flat-button
+            color="primary"
             type="button"
+            class="!w-32"
             [disabled]="userForm.invalid"
             (click)="openDialog()"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-24"
           >
             Save
           </button>
 
           <button
+            mat-stroked-button
             type="button"
+            class="!w-32"
             [disabled]="loading"
             (click)="cancel()"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none w-24 focus:shadow-outline"
           >
             Cancel
           </button>

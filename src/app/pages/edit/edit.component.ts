@@ -20,6 +20,8 @@ import { dialogData, errorAlertData, userData } from '../../mock-data/mock';
 import { Subject, takeUntil } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { emailRegExp } from '../../utilities/regular-expresions/regular-expresions';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-edit',
@@ -31,6 +33,8 @@ import { emailRegExp } from '../../utilities/regular-expresions/regular-expresio
     AlertComponent,
     MatProgressSpinnerModule,
     MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
   ],
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.css'],
@@ -138,7 +142,6 @@ export class EditComponent implements OnInit {
             this.loading = false;
             this.alertService.showSuccess();
             this.router.navigate(['']);
-            console.log('submited');
           },
           error: () => {
             this.loading = false;
@@ -159,6 +162,7 @@ export class EditComponent implements OnInit {
       .afterClosed()
       .pipe(takeUntil(this.destroy$))
       .subscribe((result: DialogResult) => {
+        console.log(result);
         if (result === DialogResult.Update) {
           this.onSubmit();
         }
