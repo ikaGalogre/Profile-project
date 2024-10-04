@@ -21,35 +21,35 @@
         <app-alert [alertData]="alertData"></app-alert>
       </div>
       }
-      <div class="w-fit mx-auto flex flex-col items-center">
+      <div class="flex flex-col items-center">
         <h1 class="text-5xl font-medium text-center mb-3">
           {{ user.name | titlecase }} {{ user.surname | titlecase }}
         </h1>
 
-        <div class="mb-10 items-center flex w-40">
+        <div class="mb-10 flex">
           <mat-icon class="text-black mr-2">location_on</mat-icon>
           <p>Tbilisi, Georgia</p>
         </div>
 
-        <div class="mb-8 items-center flex flex-col text-center">
+        <div class="mb-8 flex flex-col text-center">
           <p class="text-xl font-semibold">Web Developer - Software Engineer</p>
           <p class="text-gray-600 text-lg">
             University of Melbourne - Melbourne, Australia
           </p>
         </div>
 
-        <div class="mb-4 flex justify-center items-center w-full gap-8">
-          <span class="flex items-center">
+        <div class="mb-4 flex justify-center w-full gap-8">
+          <span class="flex">
             <mat-icon class="text-black mr-2">email</mat-icon>
             <p class="text-lg">{{ user.email }}</p>
           </span>
-          <span class="flex items-center">
+          <span class="flex">
             <mat-icon class="text-black mr-2">phone</mat-icon>
             <p class="text-lg">{{ user.mobile }}</p>
           </span>
         </div>
 
-        <div class="flex items-center justify-center mt-5">
+        <div class="flex justify-center mt-5">
           <button
             (click)="navigateToEdit(user)"
             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-10 md:px-28 rounded focus:outline-none focus:shadow-outline"

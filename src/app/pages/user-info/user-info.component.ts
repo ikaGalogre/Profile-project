@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user-service';
 import { IUserInfo } from '../../models/interfaces';
-import { AlertComponent } from '../alert/alert.component';
+import { AlertComponent } from '../../components/alert/alert.component';
 import { AlertService } from '../../services/alert.service';
 import { Subject, takeUntil } from 'rxjs';
 import { succesAlertData } from '../../mock-data/mock';
@@ -26,7 +26,9 @@ export class UserInfoComponent implements OnInit {
     private router: Router,
     private userService: UserService,
     private alertService: AlertService
-  ) {}
+  ) {
+    console.log('shakakaka');
+  }
 
   ngOnInit(): void {
     this.userService

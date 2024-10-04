@@ -11,9 +11,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../services/user-service';
 import { IAlertData, IDialogData, IUserInfo } from '../../models/interfaces';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogComponent } from '../dialog/dialog.component';
+import { DialogComponent } from '../../components/dialog/dialog.component';
 import { DialogResult } from '../../models/enums';
-import { AlertComponent } from '../alert/alert.component';
+import { AlertComponent } from '../../components/alert/alert.component';
 import { AlertService } from '../../services/alert.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { dialogData, errorAlertData, userData } from '../../mock-data/mock';
@@ -99,6 +99,8 @@ export class EditComponent implements OnInit {
   }
 
   onFileSelected(event: Event): void {
+    //fileuploadistvis calke komponenti
+    //valueaccessor
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length) {
       this.selectedFile = target.files[0];
@@ -116,7 +118,7 @@ export class EditComponent implements OnInit {
 
   onSubmit(): void {
     if (this.userForm.valid) {
-      this.loading = true;
+      this.loading = true; //mapperi
       const updatedUser: IUserInfo = {
         ...this.userData,
         profilePicture: this.selectedFile
@@ -128,22 +130,19 @@ export class EditComponent implements OnInit {
         mobile: this.userForm.get('mobile')?.value as string,
       };
 
-      this.userService
+      this.userService //calke funqciashi
         .updateUserData(updatedUser)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: () => {
-            setTimeout(() => {
-              this.loading = false;
-              this.alertService.showSuccess();
-              this.router.navigate(['']);
-            }, 2000);
+            this.loading = false;
+            this.alertService.showSuccess();
+            this.router.navigate(['']);
+            console.log('submited');
           },
           error: () => {
-            setTimeout(() => {
-              this.loading = false;
-              this.showErrorAlert = true;
-            }, 2000);
+            this.loading = false;
+            this.showErrorAlert = true;
           },
         });
     }

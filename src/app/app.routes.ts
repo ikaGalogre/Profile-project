@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { UserInfoComponent } from './components/user-info/user-info.component';
-import { EditComponent } from './components/edit/edit.component';
+import { UserInfoComponent } from './pages/user-info/user-info.component';
+import { EditComponent } from './pages/edit/edit.component';
 
 export const routes: Routes = [
   { path: '', component: UserInfoComponent },
