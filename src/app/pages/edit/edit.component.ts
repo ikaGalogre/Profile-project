@@ -22,6 +22,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { emailRegExp } from '../../utilities/regular-expresions/regular-expresions';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { mapFormToUserInfo } from '../../utilities/mappers/user-maper';
 
 @Component({
   selector: 'app-edit',
@@ -102,9 +103,9 @@ export class EditComponent implements OnInit {
       });
   }
 
+  //fileuploadistvis calke komponenti
+  //valueaccessor
   onFileSelected(event: Event): void {
-    //fileuploadistvis calke komponenti
-    //valueaccessor
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length) {
       this.selectedFile = target.files[0];
@@ -122,17 +123,13 @@ export class EditComponent implements OnInit {
 
   onSubmit(): void {
     if (this.userForm.valid) {
-      this.loading = true; //mapperi
-      const updatedUser: IUserInfo = {
-        ...this.userData,
-        profilePicture: this.selectedFile
-          ? (this.previewUrl as string)
-          : (this.userData.profilePicture as string),
-        name: this.userForm.get('name')?.value as string,
-        surname: this.userForm.get('surname')?.value as string,
-        email: this.userForm.get('email')?.value as string,
-        mobile: this.userForm.get('mobile')?.value as string,
-      };
+      this.loading = true;
+      const updatedUser: IUserInfo = mapFormToUserInfo(
+        this.userData,
+        this.userForm,
+        this.selectedFile,
+        this.previewUrl
+      );
 
       this.userService //calke funqciashi
         .updateUserData(updatedUser)
