@@ -15,10 +15,10 @@ export const dialogData: IDialogData = {
   update: 'Update',
 };
 export const errorAlertData: IAlertData = {
-  alertText: 'Something went wrong, try again later',
+  alertText: 'Something went wrong, try again later!',
   matIconName: 'info',
 };
 export const succesAlertData: IAlertData = {
-  alertText: 'Profile editted succesfully',
+  alertText: 'Your profile has been successfully updated!',
   matIconName: 'info',
 };

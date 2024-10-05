@@ -1,0 +1,36 @@
+<div class="flex flex-col items-center gap-5">
+  <h2 class="text-lg font-semibold mb-4">Update Profile Picture</h2>
+
+  @if(previewUrl) {
+  <img
+    [src]="previewUrl"
+    alt="Profile Preview"
+    class="w-48 h-48 xl:w-60 xl:h-60 rounded-full object-cover"
+  />
+
+  }
+
+  <div class="items-center mt-5">
+    <input
+      type="file"
+      id="img"
+      formControlName="profilePicture"
+      (change)="onFileSelected($event)"
+      accept="image/*"
+      class="mb-4 w-52 hidden"
+    />
+    <button
+      mat-stroked-button
+      type="button"
+      class="font-size-sm button-font-bold !h-10 !w-60"
+    >
+      <label
+        for="img"
+        class="cursor-pointer !w-60 flex justify-center items-center gap-2"
+      >
+        <mat-icon class="text-black">image</mat-icon>
+        <p class="text-black">Upload Image</p>
+      </label>
+    </button>
+  </div>
+</div>

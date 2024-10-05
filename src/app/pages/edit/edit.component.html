@@ -13,27 +13,10 @@
       </div>
       }
 
-      <div class="flex flex-col items-center">
-        <h2 class="text-lg font-semibold mb-4">Update Profile Picture</h2>
-
-        <div class="items-center">
-          <input
-            type="file"
-            formControlName="profilePicture"
-            (change)="onFileSelected($event)"
-            accept="image/*"
-            class="mb-4 w-52"
-          />
-        </div>
-
-        @if(previewUrl) {
-        <img
-          [src]="previewUrl"
-          alt="Profile Preview"
-          class="w-48 h-48 xl:w-60 xl:h-60 rounded-full object-cover"
-        />
-        }
-      </div>
+      <app-upload-file
+        formControlName="profilePicture"
+        [previewUrl]="previewUrl"
+      ></app-upload-file>
 
       <div class="md:w-96">
         <h2 class="text-lg font-semibold mb-4">Update Profile Info</h2>

@@ -23,6 +23,7 @@ import { emailRegExp } from '../../utilities/regular-expresions/regular-expresio
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { mapFormToUserInfo } from '../../utilities/mappers/user-maper';
+import { UploadFileComponent } from '../../components/upload-file/upload-file.component';
 
 @Component({
   selector: 'app-edit',
@@ -36,6 +37,7 @@ import { mapFormToUserInfo } from '../../utilities/mappers/user-maper';
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
+    UploadFileComponent,
   ],
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.css'],
@@ -78,7 +80,7 @@ export class EditComponent implements OnInit {
           Validators.pattern('^[0-9]*$'),
         ],
       ],
-      profilePicture: [''],
+      profilePicture: [null],
     });
   }
 
@@ -103,35 +105,15 @@ export class EditComponent implements OnInit {
       });
   }
 
-  //fileuploadistvis calke komponenti
-  //valueaccessor
-  onFileSelected(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    if (target.files && target.files.length) {
-      this.selectedFile = target.files[0];
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.previewUrl = e.target?.result as string;
-      };
-      reader.readAsDataURL(this.selectedFile);
-    } else {
-      this.selectedFile = null;
-      this.previewUrl = null;
-    }
-  }
-
   onSubmit(): void {
     if (this.userForm.valid) {
       this.loading = true;
       const updatedUser: IUserInfo = mapFormToUserInfo(
         this.userData,
-        this.userForm,
-        this.selectedFile,
-        this.previewUrl
+        this.userForm
       );
 
-      this.userService //calke funqciashi
+      this.userService
         .updateUserData(updatedUser)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
@@ -159,7 +141,6 @@ export class EditComponent implements OnInit {
       .afterClosed()
       .pipe(takeUntil(this.destroy$))
       .subscribe((result: DialogResult) => {
-        console.log(result);
         if (result === DialogResult.Update) {
           this.onSubmit();
         }
