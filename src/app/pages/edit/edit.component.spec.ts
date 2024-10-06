@@ -1,9 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientModule } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { EditComponent } from './edit.component';
 import { UserService } from '../../services/user-service/user-service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('EditComponent', () => {
   let component: EditComponent;
@@ -23,7 +24,7 @@ describe('EditComponent', () => {
     });
 
     await TestBed.configureTestingModule({
-      imports: [EditComponent, HttpClientModule],
+      imports: [EditComponent, BrowserAnimationsModule],
       providers: [
         { provide: UserService, useValue: userServiceSpy },
         {
@@ -33,6 +34,7 @@ describe('EditComponent', () => {
             queryParams: of({ page: 1 }),
           },
         },
+        provideHttpClient(),
       ],
     }).compileComponents();
 

@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { UserInfoComponent } from './user-info.component';
 
 describe('UserInfoComponent', () => {
@@ -8,7 +8,8 @@ describe('UserInfoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [UserInfoComponent, HttpClientModule],
+      imports: [UserInfoComponent],
+      providers: [provideHttpClient()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(UserInfoComponent);

@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  inject,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -39,8 +46,9 @@ import { FormService } from '../../services/form-service/form.service';
   ],
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EditComponent implements OnInit {
+export class EditComponent implements OnInit, OnDestroy {
   selectedFile: File | null = null;
   previewUrl: string | null = null;
   userForm: FormGroup;
@@ -57,6 +65,7 @@ export class EditComponent implements OnInit {
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private dialog = inject(MatDialog);
+  private cdr = inject(ChangeDetectorRef);
 
   constructor() {
     this.userForm = this.fb.group({
@@ -94,7 +103,10 @@ export class EditComponent implements OnInit {
       this.userForm,
       id,
       this.destroy$,
-      (url: string | null) => (this.previewUrl = url)
+      (url: string | null) => {
+        this.previewUrl = url;
+        this.cdr.markForCheck();
+      }
     );
   }
 
@@ -104,8 +116,14 @@ export class EditComponent implements OnInit {
       this.userData,
       this.id,
       this.destroy$,
-      (loading: boolean) => (this.loading = loading),
-      (showError: boolean) => (this.showErrorAlert = showError)
+      (loading: boolean) => {
+        this.loading = loading;
+        this.cdr.markForCheck();
+      },
+      (showError: boolean) => {
+        this.showErrorAlert = showError;
+        this.cdr.markForCheck();
+      }
     );
   }
 
@@ -122,6 +140,7 @@ export class EditComponent implements OnInit {
       .subscribe((result: DialogResult) => {
         if (result === DialogResult.Update) {
           this.onSubmit();
+          this.cdr.markForCheck();
         }
       });
   }

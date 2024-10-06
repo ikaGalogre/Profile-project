@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, forwardRef, Input } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  forwardRef,
+  Input,
+  ViewChild,
+  ChangeDetectorRef,
+  inject,
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -22,8 +30,11 @@ import { defaultData } from '../../mock-data/mock';
 })
 export class UploadFileComponent implements ControlValueAccessor {
   @Input() previewUrl: string | null = null;
+  @ViewChild('imageFileInput') fileInput!: ElementRef<HTMLInputElement>;
   defaultData: IDefaultUserInfo = defaultData;
   selectedFile: File | null = null;
+
+  private cdr = inject(ChangeDetectorRef);
 
   onChange: (file: string | null) => void = () => {};
   onTouched: () => void = () => {};
@@ -38,13 +49,23 @@ export class UploadFileComponent implements ControlValueAccessor {
         this.previewUrl = e.target?.result as string;
 
         this.onChange(this.previewUrl);
+        this.cdr.markForCheck();
       };
       reader.readAsDataURL(this.selectedFile);
     } else {
       this.selectedFile = null;
       this.previewUrl = null;
       this.onChange(null);
+      this.cdr.markForCheck();
     }
+  }
+
+  fileRemoved() {
+    this.previewUrl = null;
+    this.selectedFile = null;
+    this.fileInput.nativeElement.value = '';
+    this.onChange(null);
+    this.cdr.markForCheck();
   }
 
   writeValue(file: string | null): void {
@@ -57,10 +78,5 @@ export class UploadFileComponent implements ControlValueAccessor {
 
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
-  }
-  fileRemoved() {
-    this.previewUrl = null;
-    this.selectedFile = null;
-    this.onChange(null);
   }
 }

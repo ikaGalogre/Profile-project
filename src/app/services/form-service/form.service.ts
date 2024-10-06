@@ -24,7 +24,6 @@ export class FormService {
     this.userService
       .editUserData(id)
       .pipe(takeUntil(destroy$))
-
       .subscribe((userData: IUserInfo) => {
         userForm.patchValue({
           id: userData.id,

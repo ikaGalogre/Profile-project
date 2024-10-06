@@ -14,9 +14,11 @@ export class UserService {
   getUserData() {
     return this.httpClient.get<IUserInfo[]>(this.apiUrl);
   }
+
   editUserData(id: number) {
     return this.httpClient.get<IUserInfo>(`${this.apiUrl}/${id}`);
   }
+
   updateUserData(data: IUserInfo) {
     return this.httpClient
       .put<IUserInfo>(`${this.apiUrl}/${data.id}`, data)

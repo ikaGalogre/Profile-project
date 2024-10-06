@@ -1,4 +1,11 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  inject,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { IDefaultUserInfo, IUserInfo } from '../../models/interfaces';
 import { AlertComponent } from '../../components/alert/alert.component';
@@ -15,46 +22,52 @@ import { UserService } from '../../services/user-service/user-service';
   standalone: true,
   imports: [AlertComponent, CommonModule, MatIconModule, MatButtonModule],
   templateUrl: './user-info.component.html',
-  styleUrl: './user-info.component.css',
+  styleUrls: ['./user-info.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserInfoComponent implements OnInit {
+export class UserInfoComponent implements OnInit, OnDestroy {
   user: IUserInfo[] = [];
   showSuccessAlert = false;
   alertData = succesAlertData;
   userData: IUserInfo = userData;
   defaultData: IDefaultUserInfo = defaultData;
-  destroy$ = new Subject<null>();
+  destroy$ = new Subject<void>();
 
   private userService = inject(UserService);
   private alertService = inject(AlertService);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
     this.userService
       .getUserData()
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
-        this.user = data;
+        this.user = [...data];
+        this.cdr.markForCheck();
       });
+
     this.alertService.success$
       .pipe(takeUntil(this.destroy$))
       .subscribe((success) => {
         this.showSuccessAlert = success;
+        this.cdr.markForCheck();
 
         if (success) {
           setTimeout(() => {
             this.alertService.resetSuccess();
+            this.cdr.markForCheck();
           }, 3000);
         }
       });
   }
 
   navigateToEdit(user: IUserInfo) {
-    this.router.navigate([`/edit/${user.id || 1}`]);
+    this.router.navigate([`/edit/${user.id}`]);
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next(null);
+    this.destroy$.next();
     this.destroy$.complete();
   }
 }
