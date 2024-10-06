@@ -3,6 +3,8 @@ import { Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { IDefaultUserInfo } from '../../models/interfaces';
+import { defaultData } from '../../mock-data/mock';
 
 @Component({
   selector: 'app-upload-file',
@@ -20,7 +22,7 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class UploadFileComponent implements ControlValueAccessor {
   @Input() previewUrl: string | null = null;
-
+  defaultData: IDefaultUserInfo = defaultData;
   selectedFile: File | null = null;
 
   onChange: (file: string | null) => void = () => {};
@@ -55,5 +57,10 @@ export class UploadFileComponent implements ControlValueAccessor {
 
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
+  }
+  fileRemoved() {
+    this.previewUrl = null;
+    this.selectedFile = null;
+    this.onChange(null);
   }
 }

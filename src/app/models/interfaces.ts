@@ -6,6 +6,10 @@ export interface IUserInfo {
   mobile: string;
   profilePicture: string;
 }
+export interface IDefaultUserInfo {
+  defaultPicture: string;
+  defaultInfoText: string;
+}
 export interface IDialogData {
   header: string;
   title: string;

@@ -67,13 +67,11 @@
             <input matInput formControlName="email" id="email" type="email" />
             @if(userForm.get('email')?.invalid &&
             (userForm.get('email')?.touched || userForm.get('email')?.dirty)) {
-            <mat-error *ngIf="userForm.get('email')?.errors?.['required'] ">
-              Email is required
-            </mat-error>
-            <mat-error *ngIf="userForm.get('email')?.errors?.['pattern']">
-              Invalid email format
-            </mat-error>
-            }
+            @if(userForm.get('email')?.errors?.['required'] ){
+            <mat-error> Email is required </mat-error>
+            } @if(userForm.get('email')?.errors?.['pattern']){
+            <mat-error> Invalid email format </mat-error>
+            } }
           </mat-form-field>
         </div>
 
@@ -93,17 +91,13 @@
             />
             @if(userForm.get('mobile')?.invalid &&
             (userForm.get('mobile')?.touched || userForm.get('mobile')?.dirty))
-            {
-            <mat-error *ngIf="userForm.get('mobile')?.errors?.['pattern']">
-              Only numbers are allowed
-            </mat-error>
-            <mat-error *ngIf="userForm.get('mobile')?.errors?.['minlength']">
-              Min 10 numbers
-            </mat-error>
-            <mat-error *ngIf="userForm.get('mobile')?.errors?.['maxlength']">
-              Max 10 numbers
-            </mat-error>
-            }
+            { @if(userForm.get('mobile')?.errors?.['pattern']){
+            <mat-error> Only numbers are allowed </mat-error>
+            } @if(userForm.get('mobile')?.errors?.['minlength']){
+            <mat-error> Min 10 numbers </mat-error>}
+            @if(userForm.get('mobile')?.errors?.['maxlength']){
+            <mat-error> Max 10 numbers </mat-error>
+            } }
           </mat-form-field>
         </div>
 

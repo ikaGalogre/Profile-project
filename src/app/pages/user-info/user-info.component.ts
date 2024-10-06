@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserService } from '../../services/user-service';
-import { IUserInfo } from '../../models/interfaces';
+import { IDefaultUserInfo, IUserInfo } from '../../models/interfaces';
 import { AlertComponent } from '../../components/alert/alert.component';
-import { AlertService } from '../../services/alert.service';
+import { AlertService } from '../../services/alert-service/alert.service';
 import { Subject, takeUntil } from 'rxjs';
-import { succesAlertData } from '../../mock-data/mock';
+import { defaultData, succesAlertData, userData } from '../../mock-data/mock';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { UserService } from '../../services/user-service/user-service';
 
 @Component({
   selector: 'app-user-info',
@@ -21,13 +21,13 @@ export class UserInfoComponent implements OnInit {
   user: IUserInfo[] = [];
   showSuccessAlert = false;
   alertData = succesAlertData;
+  userData: IUserInfo = userData;
+  defaultData: IDefaultUserInfo = defaultData;
   destroy$ = new Subject<null>();
 
-  constructor(
-    private router: Router,
-    private userService: UserService,
-    private alertService: AlertService
-  ) {}
+  private userService = inject(UserService);
+  private alertService = inject(AlertService);
+  private router = inject(Router);
 
   ngOnInit(): void {
     this.userService
@@ -50,7 +50,7 @@ export class UserInfoComponent implements OnInit {
   }
 
   navigateToEdit(user: IUserInfo) {
-    this.router.navigate([`/edit/${user.id}`]);
+    this.router.navigate([`/edit/${user.id || 1}`]);
   }
 
   ngOnDestroy(): void {

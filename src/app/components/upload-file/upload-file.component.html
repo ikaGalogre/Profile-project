@@ -1,14 +1,11 @@
 <div class="flex flex-col items-center gap-5">
   <h2 class="text-lg font-semibold mb-4">Update Profile Picture</h2>
 
-  @if(previewUrl) {
   <img
-    [src]="previewUrl"
+    [src]="previewUrl ? previewUrl : defaultData.defaultPicture"
     alt="Profile Preview"
-    class="w-48 h-48 xl:w-60 xl:h-60 rounded-full object-cover"
+    class="w-48 h-48 xl:w-60 xl:h-60 rounded-full object-cover border-2 border-gray-300"
   />
-
-  }
 
   <div class="items-center mt-5">
     <input
@@ -19,18 +16,36 @@
       accept="image/*"
       class="mb-4 w-52 hidden"
     />
-    <button
-      mat-stroked-button
-      type="button"
-      class="font-size-sm button-font-bold !h-10 !w-60"
-    >
-      <label
-        for="img"
-        class="cursor-pointer !w-60 flex justify-center items-center gap-2"
+    <div class="flex flex-col gap-2">
+      <button
+        mat-fab
+        type="button"
+        class="font-size-sm button-font-bold !h-10 !w-60"
       >
-        <mat-icon class="text-black">image</mat-icon>
-        <p class="text-black">Upload Image</p>
-      </label>
-    </button>
+        <label
+          for="img"
+          class="cursor-pointer !w-60 !h-10 !rounded-xl flex justify-center items-center gap-2"
+        >
+          @if(!previewUrl){
+          <p class="text-black">Upload Image</p>
+          }@else{
+          <p class="text-black">Upload New Image</p>
+          }
+          <mat-icon class="text-gray-600">image</mat-icon>
+        </label>
+      </button>
+      @if(previewUrl){
+      <button
+        mat-fab
+        type="button"
+        class="font-size-sm button-font-bold !h-10 !w-60"
+        (click)="fileRemoved()"
+      >
+        <span class="flex justify-center items-center text-black gap-2"
+          >Remove Image<mat-icon class="text-red-600">delete</mat-icon>
+        </span>
+      </button>
+      }
+    </div>
   </div>
 </div>

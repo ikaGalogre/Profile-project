@@ -3,7 +3,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { EditComponent } from './edit.component';
-import { UserService } from '../../services/user-service';
+import { UserService } from '../../services/user-service/user-service';
 
 describe('EditComponent', () => {
   let component: EditComponent;

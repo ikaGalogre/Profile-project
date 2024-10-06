@@ -4,10 +4,17 @@
     class="w-full md:w-3/4 bg-white mx-auto shadow-xl overflow-hidden mb-64 rounded-3xl"
   >
     <div class="flex mx-auto justify-center mt-20">
-      <div class="relative md:absolute md:top-20">
+      <div
+        class="relative md:absolute md:top-20"
+        [ngClass]="user.name ? '' : '!top-36'"
+      >
         <img
           class="w-60 h-60 object-cover rounded-full border-2 border-gray-300"
-          [src]="user.profilePicture"
+          [src]="
+            user.profilePicture
+              ? user.profilePicture
+              : defaultData.defaultPicture
+          "
           alt="User Profile Picture"
         />
       </div>
@@ -22,8 +29,16 @@
       </div>
       }
       <div class="flex flex-col items-center">
+        @if(!user.name){
+        <div class="text-xl font-medium text-center w-2/3 mb-10">
+          <p class="text-gray-600">
+            {{ defaultData.defaultInfoText }}
+          </p>
+        </div>
+        } @if(user.name){
         <h1 class="text-5xl font-medium text-center mb-3">
-          {{ user.name | titlecase }} {{ user.surname | titlecase }}
+          {{ user.name | titlecase }}
+          {{ user.surname | titlecase }}
         </h1>
 
         <div class="mb-10 flex">
@@ -38,26 +53,33 @@
           </p>
         </div>
 
-        <div class="mb-4 flex justify-center w-full gap-8">
-          <span class="flex">
+        <div class="mb-10 flex justify-center w-full gap-8">
+          <span class="flex justify-center items-center">
             <mat-icon class="text-black mr-2">email</mat-icon>
-            <p class="text-lg">{{ user.email }}</p>
+            <p class="text-lg">
+              {{ user.email }}
+            </p>
           </span>
-          <span class="flex">
+          @if(user.mobile){<span class="flex justify-center items-center">
             <mat-icon class="text-black mr-2">phone</mat-icon>
-            <p class="text-lg">{{ user.mobile }}</p>
-          </span>
+            <p class="text-lg">{{ user.mobile }}</p> </span
+          >}
         </div>
+        }
 
-        <div class="flex justify-center mt-5">
-          <button
-            mat-flat-button
-            class="w-full !px-24"
-            (click)="navigateToEdit(user)"
-          >
-            Edit Profile
-          </button>
-        </div>
+        <button mat-flat-button class="!px-24" (click)="navigateToEdit(user)">
+          @if(user.name){
+          <span class="flex justify-center items-center text-white gap-3"
+            ><p class="text-lg">Edit Profile</p>
+            <mat-icon class="text-white">edit</mat-icon>
+          </span>
+          }@else{
+          <span class="flex justify-between items-center text-white gap-2"
+            ><p class="text-lg">Add Profile Info</p>
+            <mat-icon class="text-white">add</mat-icon>
+          </span>
+          }
+        </button>
       </div>
     </div>
   </div>

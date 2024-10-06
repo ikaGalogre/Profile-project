@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { DialogResult } from '../../models/enums';
 import { CommonModule } from '@angular/common';
@@ -13,7 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class DialogComponent {
   @Input() dialogData?: any;
-  constructor(public dialogRef: MatDialogRef<DialogComponent>) {}
+  private dialogRef = inject(MatDialogRef<DialogComponent>);
 
   public onCancelClick(): void {
     this.dialogRef.close(DialogResult.Cancel);
