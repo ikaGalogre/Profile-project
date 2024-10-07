@@ -2,9 +2,48 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.7.
 
-## Development server
+# Prerequisites
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Make sure you have the following installed:
+
+Node.js (>= v18.x)
+Angular CLI (>= v18.2.7)
+JSON Server (for mocking APIs)
+
+# Running the Development Server
+
+To run the development server along with the mock API server, use the following command:
+
+Copy code
+`npm run start:dev`
+
+This will start the Angular development server on `http://localhost:4200`.
+It will also start json-server on `http://localhost:3000` to serve data from db.json.
+The application will automatically reload if you change any of the source files.
+
+# If npm run start:dev doesn't work, you can manually start both the Angular app and the mock API server in separate terminals:
+
+Start the Angular app:
+Copy code
+`ng serve`
+
+Start the mock API server:
+Copy code
+`json-server --watch db.json`
+
+# Running Unit Tests
+
+To run unit tests with Karma:
+
+Copy code
+`npm run test`
+The test runner will automatically launch a browser to execute the tests.
+
+# If npm run test doesn't work, you can manually run unit tests
+
+Copy code
+`ng test`
+this executes the unit tests via [Karma](https://karma-runner.github.io).
 
 ## Code scaffolding
 
@@ -13,14 +52,6 @@ Run `ng generate component component-name` to generate a new component. You can 
 ## Build
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
 
 ## Further help
 
