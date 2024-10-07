@@ -1,11 +1,11 @@
 import { inject, Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
-import { IUserInfo } from '../../models/interfaces';
 import { mapFormToUserInfo } from '../../utilities/mappers/user-maper';
 import { AlertService } from '../alert-service/alert.service';
 import { Router } from '@angular/router';
 import { UserService } from '../user-service/user-service';
+import { IUserInfo } from '../../models/interfaces/user-info.interface';
 
 @Injectable({
   providedIn: 'root',

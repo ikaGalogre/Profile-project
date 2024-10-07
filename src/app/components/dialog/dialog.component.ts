@@ -1,6 +1,6 @@
 import { Component, inject, Input } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { DialogResult } from '../../models/enums';
+import { DialogResult } from '../../models/enums/dialog-result.enum';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -9,7 +9,6 @@ import { MatButtonModule } from '@angular/material/button';
   standalone: true,
   imports: [CommonModule, MatButtonModule],
   templateUrl: './dialog.component.html',
-  styleUrl: './dialog.component.css',
 })
 export class DialogComponent {
   @Input() dialogData?: any;

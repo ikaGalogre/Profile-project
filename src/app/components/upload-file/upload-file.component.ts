@@ -11,8 +11,8 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { IDefaultUserInfo } from '../../models/interfaces';
 import { defaultData } from '../../mock-data/mock';
+import { IDefaultUserInfo } from '../../models/interfaces/default-info.interface';
 
 @Component({
   selector: 'app-upload-file',
@@ -26,7 +26,6 @@ import { defaultData } from '../../mock-data/mock';
     },
   ],
   templateUrl: './upload-file.component.html',
-  styleUrls: ['./upload-file.component.css'],
 })
 export class UploadFileComponent implements ControlValueAccessor {
   @Input() previewUrl: string | null = null;

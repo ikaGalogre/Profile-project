@@ -1,9 +1,7 @@
-import {
-  IAlertData,
-  IDefaultUserInfo,
-  IDialogData,
-  IUserInfo,
-} from '../models/interfaces';
+import { IAlertData } from '../models/interfaces/alert-data.interface';
+import { IDefaultUserInfo } from '../models/interfaces/default-info.interface';
+import { IDialogData } from '../models/interfaces/dialog-data.interface';
+import { IUserInfo } from '../models/interfaces/user-info.interface';
 
 export const userData: IUserInfo = {
   id: 0,

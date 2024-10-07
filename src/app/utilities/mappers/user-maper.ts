@@ -1,5 +1,5 @@
 import { FormGroup } from '@angular/forms';
-import { IUserInfo } from '../../models/interfaces';
+import { IUserInfo } from '../../models/interfaces/user-info.interface';
 
 export function mapFormToUserInfo(
   userData: IUserInfo,

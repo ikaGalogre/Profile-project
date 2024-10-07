@@ -15,10 +15,9 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IAlertData, IDialogData, IUserInfo } from '../../models/interfaces';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../../components/dialog/dialog.component';
-import { DialogResult } from '../../models/enums';
+import { DialogResult } from '../../models/enums/dialog-result.enum';
 import { AlertComponent } from '../../components/alert/alert.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { dialogData, errorAlertData, userData } from '../../mock-data/mock';
@@ -29,6 +28,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { UploadFileComponent } from '../../components/upload-file/upload-file.component';
 import { FormService } from '../../services/form-service/form.service';
+import { IAlertData } from '../../models/interfaces/alert-data.interface';
+import { IDialogData } from '../../models/interfaces/dialog-data.interface';
+import { IUserInfo } from '../../models/interfaces/user-info.interface';
 
 @Component({
   selector: 'app-edit',
@@ -45,7 +47,6 @@ import { FormService } from '../../services/form-service/form.service';
     UploadFileComponent,
   ],
   templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditComponent implements OnInit, OnDestroy {

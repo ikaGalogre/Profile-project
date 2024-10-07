@@ -7,7 +7,6 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { IDefaultUserInfo, IUserInfo } from '../../models/interfaces';
 import { AlertComponent } from '../../components/alert/alert.component';
 import { AlertService } from '../../services/alert-service/alert.service';
 import { Subject, takeUntil } from 'rxjs';
@@ -16,13 +15,14 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { UserService } from '../../services/user-service/user-service';
+import { IDefaultUserInfo } from '../../models/interfaces/default-info.interface';
+import { IUserInfo } from '../../models/interfaces/user-info.interface';
 
 @Component({
   selector: 'app-user-info',
   standalone: true,
   imports: [AlertComponent, CommonModule, MatIconModule, MatButtonModule],
   templateUrl: './user-info.component.html',
-  styleUrls: ['./user-info.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserInfoComponent implements OnInit, OnDestroy {
