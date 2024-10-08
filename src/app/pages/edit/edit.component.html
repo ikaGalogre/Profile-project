@@ -3,15 +3,14 @@
     <div
       class="px-10 py-10 flex flex-col md:flex-row w-full md:w-3/4 bg-white md:py-24 md:mb-72 justify-center gap-10 md:gap-20 lg:gap-60 mx-auto shadow-xl overflow-hidden sm:mb-60 rounded-3xl"
     >
-      @if(loading) {
+      @if(loading$ | async) {
       <mat-spinner
         class="!w-28 !absolute right-[37%] md:right-[49%] top-1/2"
       ></mat-spinner>
-      } @if(showErrorAlert) {
+      }
       <div class="absolute md:top-20 top-4">
         <app-alert [alertData]="alertData"></app-alert>
       </div>
-      }
 
       <app-upload-file
         formControlName="profilePicture"
@@ -117,7 +116,7 @@
             mat-stroked-button
             type="button"
             class="!w-32"
-            [disabled]="loading"
+            [disabled]="loading$ | async"
             (click)="cancel()"
           >
             Cancel

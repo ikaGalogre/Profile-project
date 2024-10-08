@@ -1,16 +1,6 @@
 import { IAlertData } from '../models/interfaces/alert-data.interface';
 import { IDefaultUserInfo } from '../models/interfaces/default-info.interface';
 import { IDialogData } from '../models/interfaces/dialog-data.interface';
-import { IUserInfo } from '../models/interfaces/user-info.interface';
-
-export const userData: IUserInfo = {
-  id: 0,
-  name: '',
-  surname: '',
-  mobile: '',
-  email: '',
-  profilePicture: '',
-};
 
 export const defaultData: IDefaultUserInfo = {
   defaultInfoText:

@@ -1,5 +1,5 @@
 <div class="w-screen">
-  @for(user of user;track user){
+  @if(user$ |async; as user){
   <div
     class="w-full md:w-3/4 bg-white mx-auto shadow-xl overflow-hidden mb-28 sm:mb-64 rounded-3xl"
   >
@@ -23,11 +23,10 @@
     <div
       class="flex justify-center items-center my-10 md:my-28 flex-col w-full"
     >
-      @if(showSuccessAlert){
       <div class="absolute top-5">
         <app-alert [alertData]="alertData"></app-alert>
       </div>
-      }
+
       <div class="flex flex-col items-center">
         @if(!user.name){
         <div class="text-xl font-medium text-center w-2/3 mb-10">

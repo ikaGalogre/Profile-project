@@ -1,22 +1,23 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   inject,
   OnInit,
-  OnDestroy,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertComponent } from '../../components/alert/alert.component';
-import { AlertService } from '../../services/alert-service/alert.service';
-import { Subject, takeUntil } from 'rxjs';
-import { defaultData, succesAlertData, userData } from '../../mock-data/mock';
+import { Observable, Subject } from 'rxjs';
+import { defaultData, succesAlertData } from '../../mock-data/mock';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { UserService } from '../../services/user-service/user-service';
 import { IDefaultUserInfo } from '../../models/interfaces/default-info.interface';
 import { IUserInfo } from '../../models/interfaces/user-info.interface';
+import { UserState } from '../../stores/user-store/user.reducer';
+import { Store } from '@ngrx/store';
+import { selectUser } from '../../stores/user-store/user.selectors';
+import { UserActions } from '../../stores/user-store/user.actions';
+import { IAlertData } from '../../models/interfaces/alert-data.interface';
 
 @Component({
   selector: 'app-user-info',
@@ -25,49 +26,24 @@ import { IUserInfo } from '../../models/interfaces/user-info.interface';
   templateUrl: './user-info.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserInfoComponent implements OnInit, OnDestroy {
-  user: IUserInfo[] = [];
-  showSuccessAlert = false;
-  alertData = succesAlertData;
-  userData: IUserInfo = userData;
+export class UserInfoComponent implements OnInit {
+  alertData: IAlertData = succesAlertData;
   defaultData: IDefaultUserInfo = defaultData;
-  destroy$ = new Subject<void>();
 
-  private userService = inject(UserService);
-  private alertService = inject(AlertService);
+  user$: Observable<IUserInfo | null>;
+
   private router = inject(Router);
-  private cdr = inject(ChangeDetectorRef);
+  private store: Store<UserState> = inject(Store);
+
+  constructor() {
+    this.user$ = this.store.select(selectUser);
+  }
 
   ngOnInit(): void {
-    this.userService
-      .getUserData()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data) => {
-        this.user = [...data];
-        this.cdr.markForCheck();
-      });
-
-    this.alertService.success$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((success) => {
-        this.showSuccessAlert = success;
-        this.cdr.markForCheck();
-
-        if (success) {
-          setTimeout(() => {
-            this.alertService.resetSuccess();
-            this.cdr.markForCheck();
-          }, 3000);
-        }
-      });
+    this.store.dispatch(UserActions.loadUser({}));
   }
 
   navigateToEdit(user: IUserInfo) {
     this.router.navigate([`/edit/${user.id}`]);
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 }

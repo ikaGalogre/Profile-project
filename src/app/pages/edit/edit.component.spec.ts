@@ -1,72 +1,143 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
-import { of } from 'rxjs';
 import { EditComponent } from './edit.component';
-import { UserService } from '../../services/user-service/user-service';
+import { ReactiveFormsModule } from '@angular/forms';
+import { StoreModule } from '@ngrx/store';
+import { provideMockStore } from '@ngrx/store/testing';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, provideRouter, Router } from '@angular/router';
+import { of } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { UploadFileComponent } from '../../components/upload-file/upload-file.component';
+import { AlertComponent } from '../../components/alert/alert.component';
+import { EffectsModule } from '@ngrx/effects';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { provideHttpClient } from '@angular/common/http';
+import { UserInfoComponent } from '../user-info/user-info.component';
+import { UserActions } from '../../stores/user-store/user.actions';
+import {
+  selectUser,
+  selectLoading,
+} from '../../stores/user-store/user.selectors';
 
 describe('EditComponent', () => {
   let component: EditComponent;
   let fixture: ComponentFixture<EditComponent>;
-  let userServiceSpy: jasmine.SpyObj<UserService>;
+  let activatedRoute: ActivatedRoute;
+
+  const mockUser = {
+    id: 1,
+    name: 'John',
+    surname: 'Doe',
+    email: 'john.doe@example.com',
+    mobile: '1234567890',
+    profilePicture: '',
+  };
 
   beforeEach(async () => {
-    userServiceSpy = jasmine.createSpyObj('UserService', {
-      editUserData: of({
-        name: 'John',
-        surname: 'Doe',
-        email: 'john.doe@example.com',
-        mobile: '1234567890',
-        profilePicture: null,
-      }),
-      updateUserData: of({}),
-    });
-
     await TestBed.configureTestingModule({
-      imports: [EditComponent, BrowserAnimationsModule],
+      imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatProgressSpinnerModule,
+        UploadFileComponent,
+        AlertComponent,
+        StoreModule.forRoot({}),
+        EffectsModule.forRoot([]),
+        BrowserAnimationsModule,
+      ],
       providers: [
-        { provide: UserService, useValue: userServiceSpy },
+        provideMockStore({
+          selectors: [
+            {
+              selector: selectUser,
+              value: mockUser,
+            },
+            {
+              selector: selectLoading,
+              value: false,
+            },
+          ],
+        }),
         {
-          provide: ActivatedRoute,
+          provide: MatDialog,
           useValue: {
-            paramMap: of({ get: () => '1' }),
-            queryParams: of({ page: 1 }),
+            open: jasmine.createSpy('open').and.returnValue({
+              afterClosed: () => of(null),
+            }),
           },
         },
-        provideHttpClient(),
+        provideRouter([
+          {
+            path: '',
+            component: UserInfoComponent,
+          },
+        ]),
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(EditComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    activatedRoute = TestBed.inject(ActivatedRoute);
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call getById function and pre-populate the form with user data', () => {
-    component.ngOnInit();
-    expect(userServiceSpy.editUserData).toHaveBeenCalledWith(1);
-    expect(component.userForm.get('name')?.value).toBe('John');
-    expect(component.userForm.get('surname')?.value).toBe('Doe');
-    expect(component.userForm.get('email')?.value).toBe('john.doe@example.com');
-    expect(component.userForm.get('mobile')?.value).toBe('1234567890');
+  it('should pre-populate the form with user data', () => {
+    fixture.detectChanges();
+    expect(component.userForm.value).toEqual({
+      name: 'John',
+      surname: 'Doe',
+      email: 'john.doe@example.com',
+      mobile: '1234567890',
+      profilePicture: '',
+    });
+    expect(component.previewUrl).toBe('');
   });
 
-  it('should handle form submission and call updateUserData', () => {
-    component.userForm.get('name')?.setValue('Jane');
-    component.userForm.get('surname')?.setValue('Smith');
-    component.userForm.get('email')?.setValue('jane.smith@example.com');
-    component.userForm.get('mobile')?.setValue('0987654321');
+  it('should submit the form when valid', () => {
+    spyOn(component['store'], 'dispatch');
+
+    component.id = mockUser.id;
+    component.userForm.patchValue(mockUser);
+
     component.onSubmit();
 
-    expect(userServiceSpy.updateUserData).toHaveBeenCalled();
+    expect(component.userForm.valid).toBeTrue();
+    expect(component['store'].dispatch).toHaveBeenCalledWith(
+      UserActions.updateUser({ user: { ...mockUser, id: component.id } })
+    );
   });
 
-  afterEach(() => {
-    component.ngOnDestroy();
+  it('should not submit the form when invalid', () => {
+    spyOn(component['store'], 'dispatch');
+
+    component.userForm.patchValue({
+      name: '',
+      surname: '',
+      email: '',
+      mobile: '',
+    });
+
+    component.onSubmit();
+
+    expect(component.userForm.valid).toBeFalse();
+    expect(component['store'].dispatch).not.toHaveBeenCalled();
+  });
+
+  it('should navigate to the home page on cancel', () => {
+    const router = TestBed.inject(Router);
+    spyOn(router, 'navigate');
+
+    component.cancel();
+
+    expect(router.navigate).toHaveBeenCalledWith(['']);
   });
 });

@@ -22,6 +22,6 @@ export class UserService {
   updateUserData(data: IUserInfo) {
     return this.httpClient
       .put<IUserInfo>(`${this.apiUrl}/${data.id}`, data)
-      .pipe(delay(5000));
+      .pipe(delay(1000));
   }
 }

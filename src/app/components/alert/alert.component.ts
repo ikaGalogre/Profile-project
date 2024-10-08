@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { IAlertData } from '../../models/interfaces/alert-data.interface';
+import { AlertService } from '../../services/alert-service/alert.service';
 @Component({
   selector: 'app-alert',
   standalone: true,
@@ -11,10 +12,9 @@ import { IAlertData } from '../../models/interfaces/alert-data.interface';
 })
 export class AlertComponent {
   @Input() alertData?: IAlertData;
-  showAlert = true;
 
-  hideAlert(event: MouseEvent): void {
-    event.preventDefault();
-    this.showAlert = false;
-  }
+  private alertService = inject(AlertService);
+
+  success$ = this.alertService.success$;
+  error$ = this.alertService.error$;
 }

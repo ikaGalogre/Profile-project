@@ -5,8 +5,9 @@ import {
   forwardRef,
   Input,
   ViewChild,
-  ChangeDetectorRef,
-  inject,
+  signal,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -27,13 +28,21 @@ import { IDefaultUserInfo } from '../../models/interfaces/default-info.interface
   ],
   templateUrl: './upload-file.component.html',
 })
-export class UploadFileComponent implements ControlValueAccessor {
+export class UploadFileComponent implements ControlValueAccessor, OnChanges {
   @Input() previewUrl: string | null = null;
   @ViewChild('imageFileInput') fileInput!: ElementRef<HTMLInputElement>;
   defaultData: IDefaultUserInfo = defaultData;
   selectedFile: File | null = null;
 
-  private cdr = inject(ChangeDetectorRef);
+  profileImg = signal(defaultData.defaultPicture);
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['previewUrl']) {
+      this.profileImg.set(
+        this.previewUrl ? this.previewUrl : defaultData.defaultPicture
+      );
+    }
+  }
 
   onChange: (file: string | null) => void = () => {};
   onTouched: () => void = () => {};
@@ -48,14 +57,14 @@ export class UploadFileComponent implements ControlValueAccessor {
         this.previewUrl = e.target?.result as string;
 
         this.onChange(this.previewUrl);
-        this.cdr.markForCheck();
+        this.profileImg.set(this.previewUrl);
       };
       reader.readAsDataURL(this.selectedFile);
     } else {
       this.selectedFile = null;
       this.previewUrl = null;
       this.onChange(null);
-      this.cdr.markForCheck();
+      this.profileImg.set(defaultData.defaultPicture);
     }
   }
 
@@ -64,7 +73,7 @@ export class UploadFileComponent implements ControlValueAccessor {
     this.selectedFile = null;
     this.fileInput.nativeElement.value = '';
     this.onChange(null);
-    this.cdr.markForCheck();
+    this.profileImg.set(defaultData.defaultPicture);
   }
 
   writeValue(file: string | null): void {
