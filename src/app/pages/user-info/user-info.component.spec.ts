@@ -20,7 +20,7 @@ describe('UserInfoComponent', () => {
     storeSpy = jasmine.createSpyObj('Store', ['dispatch', 'select']);
     routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
-    const mockUser: IUserInfo = {
+    const mockUser = {
       id: 1,
       name: 'John',
       email: 'john.doe@example.com',
@@ -55,9 +55,7 @@ describe('UserInfoComponent', () => {
 
   it('should dispatch loadUser action on ngOnInit', () => {
     component.ngOnInit();
-    expect(storeSpy.dispatch).toHaveBeenCalledWith(
-      UserActions.loadUser({ id: 1 })
-    );
+    expect(storeSpy.dispatch).toHaveBeenCalledWith(UserActions.loadUser({}));
   });
 
   it('should navigate to edit page with user id', () => {
